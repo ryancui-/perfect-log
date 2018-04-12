@@ -1,0 +1,33 @@
+{
+  "name": "smart-log",
+  "version": "0.0.1",
+  "description": "A front-end logging tools",
+  "main": "dist/smart-log.common.js",
+  "scripts": {
+    "dev": "rollup -c -m -w",
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "ryancui-/smart-log",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "keywords": [
+    "log",
+    "smart-log"
+  ],
+  "author": {
+    "name": "ryancui-",
+    "email": "cuizhaowei92@gmail.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "rollup": "^0.57.1",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-node-resolve": "^3.3.0"
+  }
+}

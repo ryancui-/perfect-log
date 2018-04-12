@@ -1,0 +1,6 @@
+# For now not commit package-lock.json
+package-lock.json
+
+.idea
+node_modules
+dist/*.map
