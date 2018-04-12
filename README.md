@@ -8,7 +8,7 @@ Provide a set of log tools and help to get rid of using `console.log` in the sou
 
 Also, it allows you to upload your log(including bussiness or unhandled error) to your own backend service, which you can analyze them or just push to some log manage system, like ELK.
 
-This package is designed for browser end.
+This package is designed for **browser** end.
 
 ## Installation
 
@@ -105,9 +105,30 @@ The data sent to backend is a JSON format defined below:
 
 ```javascript
 {
-  time: 
+  "level": "INFO",
+  "msg": "Uncaught ReferenceError: ppp is not defined",
+  "time": "2018-04-12T13:00:37.365Z",
+  "data": {
+    "pluginVersion": "1.1.2",
+    "userId": 1
+  },
+  "row": 33,
+  "stack": "ReferenceError: ppp is not defined↵    at HTMLButtonElement.document ...",
+  "uri": "http://localhost:63343/smart-log/examples/log-in-page.html?_ijt=9osog379isnpgj3tma19scjusk",
+  "platform": {
+    "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"
+  }
 }
 ```
+
+- `level` - The log level
+- `msg` - Message
+- `time` - UTC Time
+- `data` - Your own defined data
+- `row` - Exist when log level is `ERROR`, indicates the error line number
+- `stack` - Exist when log level is `ERROR`, the string of `err.stack`
+- `uri` - Exist when log level is `ERROR`, the error file position
+- `platform` - An object about platform: `browser` is `navigator.userAgent`
 
 ## Lisence
 
