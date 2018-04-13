@@ -1,6 +1,6 @@
 {
   "name": "@ryancui-/smart-log",
-  "version": "0.0.2-beta.1",
+  "version": "0.0.2-beta.2",
   "description": "A front-end logging tools",
   "main": "dist/smart-log.common.js",
   "scripts": {

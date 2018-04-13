@@ -1,10 +1,10 @@
 /*!
- * Smart log v0.0.2-beta
+ * Smart log v0.0.2-beta.2
  *
  * Copyright (c) 2018-2018 ryancui-
  * Released under the MIT license
  *
- * Date: 2018-04-13T07:55:13.573Z
+ * Date: 2018-04-13T08:20:53.347Z
  */
 
 (function (global, factory) {
@@ -137,7 +137,7 @@
           if (_this.reportOptions.levelNumber >= 1) {
             var reportObj = void 0;
 
-            if (arg.length === 1 && arg instanceof Error) {
+            if (arg.length === 1 && arg[0] instanceof Error) {
               reportObj = _this.buildReportScheme('ERROR', null, null, null, arg[0]);
             } else {
               reportObj = _this.buildReportScheme('ERROR', JSON.stringify(arg));
@@ -245,19 +245,19 @@
           scheme.stack = originStack;
 
           if (msg === null) {
-            scheme.msg = error.stack.split('\n')[0];
+            scheme.msg = err.stack.split('\n')[0];
           }
 
           if (uri === null) {
-            var match = error.stack.match(/\((.*):\d+:\d+\)/);
-            scheme.uri = match[1];
+            var match = err.stack.match(/at(.*):\d+:\d+/);
+            scheme.uri = match ? match[1] : '';
           } else {
             scheme.uri = uri;
           }
 
           if (row === null) {
-            var _match = error.stack.match(/(\d+):\d+\)/);
-            scheme.row = _match[1];
+            var _match = err.stack.match(/:(\d+):\d+/);
+            scheme.row = _match ? _match[1] : '';
           } else {
             scheme.row = row;
           }
