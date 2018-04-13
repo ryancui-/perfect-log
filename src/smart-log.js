@@ -67,7 +67,14 @@ export default class SmartLog {
     this.error = (...arg) => {
       wrapError(...arg);
       if (this.reportOptions.levelNumber >= 1) {
-        const reportObj = this.buildReportScheme('ERROR', JSON.stringify(arg));
+        let reportObj;
+
+        if (arg.length === 1 && arg instanceof Error) {
+          reportObj = this.buildReportScheme('ERROR', null, null, null, arg[0]);
+        } else {
+          reportObj = this.buildReportScheme('ERROR', JSON.stringify(arg));
+        }
+
         this.report(reportObj);
       }
     };
@@ -150,9 +157,26 @@ export default class SmartLog {
     };
 
     if (err) {
-      scheme.uri = uri;
-      scheme.row = row;
-      scheme.stack = err.stack || err.stacktree;
+      const originStack = err.stack || err.stacktree || '';
+      scheme.stack = originStack;
+
+      if (msg === null) {
+        scheme.msg = error.stack.split('\n')[0];
+      }
+
+      if (uri === null) {
+        const match = error.stack.match(/\((.*):\d+:\d+\)/);
+        scheme.uri = match[1];
+      } else {
+        scheme.uri = uri;
+      }
+
+      if (row === null) {
+        const match = error.stack.match(/(\d+):\d+\)/);
+        scheme.row = match[1];
+      } else {
+        scheme.row = row;
+      }
     }
 
     return scheme;

@@ -1,10 +1,10 @@
 /*!
- * Smart log v0.0.1
+ * Smart log v0.0.2-beta
  *
  * Copyright (c) 2018-2018 ryancui-
  * Released under the MIT license
  *
- * Date: 2018-04-13T06:24:26.851Z
+ * Date: 2018-04-13T07:55:13.573Z
  */
 
 var classCallCheck = function (instance, Constructor) {
@@ -129,7 +129,14 @@ var SmartLog = function () {
 
         wrapError.apply(undefined, arg);
         if (_this.reportOptions.levelNumber >= 1) {
-          var reportObj = _this.buildReportScheme('ERROR', JSON.stringify(arg));
+          var reportObj = void 0;
+
+          if (arg.length === 1 && arg instanceof Error) {
+            reportObj = _this.buildReportScheme('ERROR', null, null, null, arg[0]);
+          } else {
+            reportObj = _this.buildReportScheme('ERROR', JSON.stringify(arg));
+          }
+
           _this.report(reportObj);
         }
       };
@@ -228,9 +235,26 @@ var SmartLog = function () {
       };
 
       if (err) {
-        scheme.uri = uri;
-        scheme.row = row;
-        scheme.stack = err.stack || err.stacktree;
+        var originStack = err.stack || err.stacktree || '';
+        scheme.stack = originStack;
+
+        if (msg === null) {
+          scheme.msg = error.stack.split('\n')[0];
+        }
+
+        if (uri === null) {
+          var match = error.stack.match(/\((.*):\d+:\d+\)/);
+          scheme.uri = match[1];
+        } else {
+          scheme.uri = uri;
+        }
+
+        if (row === null) {
+          var _match = error.stack.match(/(\d+):\d+\)/);
+          scheme.row = _match[1];
+        } else {
+          scheme.row = row;
+        }
       }
 
       return scheme;
