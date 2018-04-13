@@ -83,7 +83,7 @@ Enable the report module. According the options, log info would be sent to a bac
 
 ```javascript
 SmartLog.enableReport({
-  url: 'http://some.host/recieve',
+  url: 'http://some.host/received',
   level: 'INFO',
   data: {
     userId: 1
