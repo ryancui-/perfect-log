@@ -8,7 +8,10 @@
     "build": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "ryancui-/smart-log",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryancui-/smart-log.git"
+  },
   "files": [
     "src",
     "dist"

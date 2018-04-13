@@ -87,6 +87,10 @@ SmartLog.enableReport({
   level: 'INFO',
   data: {
     userId: 1
+  },
+  beforeSend: (log) => {
+    log.version = log.data.version;
+   	return log;     
   }
 });
 ```
@@ -95,9 +99,14 @@ Details in `options`
 
 | Field | Description                                                  | Default   |
 | ----- | ------------------------------------------------------------ | --------- |
-| url   | Backend service url, which can handle `POST` HTTP request, is necessary. | `null`    |
+| url   | Backend service url, which can handle `POST` HTTP request, is **necessary**. |     |
 | level | The least level should it report. Currently only `'DEBUG'`/`'INFO'`/`'ERROR'` is allowed. For example, if set to `'INFO'`, only INFO and ERROR level would be sent to the backend. | `'ERROR'` |
-| data  | Any specified data you want to send to the backend along with the log. | `null`    |
+| data  | Any specified data you want to send to the backend along with the log. |     |
+| beforeSend | Provide a function to transform log info schema into anything you want before sneding to backend. | |
+
+#### SmartLog.patchData(data: object)
+
+Add user defined data anywhere before report the log.
 
 ## Log Info Schema
 

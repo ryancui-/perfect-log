@@ -119,6 +119,16 @@ export default class SmartLog {
   }
 
   /**
+   * Patch user defined data
+   *
+   */
+  static patchData(data) {
+    if (data && data instanceof Object) {
+      this.reportOptions.data = Object.assign({}, this.reportOptions.data, data);
+    }
+  }
+
+  /**
    * Build the scheme object which would be sent to backend
    *
    * @param level Log level
@@ -158,6 +168,13 @@ export default class SmartLog {
     xhr.onerror = () => {
     };
     xhr.open('POST', this.reportOptions.url, true);
-    xhr.send(JSON.stringify(reportObj));
+
+    let requestBody = reportObj;
+    if (this.reportOptions.beforeSend &&
+      this.reportOptions.beforeSend instanceof Function) {
+      requestBody = this.reportOptions.beforeSend.call(null, reportObj);
+    }
+
+    xhr.send(JSON.stringify(requestBody));
   }
 }

@@ -1,11 +1,10 @@
 /*!
  * Smart log v0.0.1
- * https://github.com/ryancui-/smart-log
  *
  * Copyright (c) 2018-2018 ryancui-
  * Released under the MIT license
  *
- * Date: 2018-04-12T12:52:49.251Z
+ * Date: 2018-04-13T06:24:26.851Z
  */
 
 'use strict';
@@ -193,6 +192,19 @@ var SmartLog = function () {
     }
 
     /**
+     * Patch user defined data
+     *
+     */
+
+  }, {
+    key: 'patchData',
+    value: function patchData(data) {
+      if (data && data instanceof Object) {
+        this.reportOptions.data = Object.assign({}, this.reportOptions.data, data);
+      }
+    }
+
+    /**
      * Build the scheme object which would be sent to backend
      *
      * @param level Log level
@@ -242,7 +254,13 @@ var SmartLog = function () {
       xhr.onerror = function () {
       };
       xhr.open('POST', this.reportOptions.url, true);
-      xhr.send(JSON.stringify(reportObj));
+
+      var requestBody = reportObj;
+      if (this.reportOptions.beforeSend && this.reportOptions.beforeSend instanceof Function) {
+        requestBody = this.reportOptions.beforeSend.call(null, reportObj);
+      }
+
+      xhr.send(JSON.stringify(requestBody));
     }
   }]);
   return SmartLog;
@@ -261,4 +279,3 @@ window.onerror = function (msg, uri, row, col, err) {
 SmartLog.initialize();
 
 module.exports = SmartLog;
-//# sourceMappingURL=smart-log.common.js.map

@@ -1,23 +1,21 @@
 /*!
  * Smart log v0.0.1
- * https://github.com/ryancui-/smart-log
  *
  * Copyright (c) 2018-2018 ryancui-
  * Released under the MIT license
  *
- * Date: 2018-04-12T12:52:49.251Z
+ * Date: 2018-04-13T06:24:26.851Z
  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-    typeof define === 'function' && define.amd ? define(factory) :
-      (global.SmartLog = factory());
-}(this, (function () {
-  'use strict';
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global.SmartLog = factory());
+}(this, (function () { 'use strict';
 
   var classCallCheck = function (instance, Constructor) {
     if (!(instance instanceof Constructor)) {
-      throw new TypeError('Cannot call a class as a function');
+      throw new TypeError("Cannot call a class as a function");
     }
   };
 
@@ -27,7 +25,7 @@
         var descriptor = props[i];
         descriptor.enumerable = descriptor.enumerable || false;
         descriptor.configurable = true;
-        if ('value' in descriptor) descriptor.writable = true;
+        if ("value" in descriptor) descriptor.writable = true;
         Object.defineProperty(target, descriptor.key, descriptor);
       }
     }
@@ -44,8 +42,8 @@
   };
 
   var wrapDebug = void 0,
-    wrapInfo = void 0,
-    wrapError = void 0;
+      wrapInfo = void 0,
+      wrapError = void 0;
 
   var SmartLog = function () {
     function SmartLog() {
@@ -183,17 +181,27 @@
       value: function disableConsoleOutput() {
         this.consoleOutput = false;
 
-        wrapDebug = function wrapDebug() {
-        };
-        wrapInfo = function wrapInfo() {
-        };
-        wrapError = function wrapError() {
-        };
+        wrapDebug = function wrapDebug() {};
+        wrapInfo = function wrapInfo() {};
+        wrapError = function wrapError() {};
 
         if (!this.reportEnabled) {
           this.debug = wrapDebug;
           this.info = wrapInfo;
           this.error = wrapError;
+        }
+      }
+
+      /**
+       * Patch user defined data
+       *
+       */
+
+    }, {
+      key: 'patchData',
+      value: function patchData(data) {
+        if (data && data instanceof Object) {
+          this.reportOptions.data = Object.assign({}, this.reportOptions.data, data);
         }
       }
 
@@ -244,10 +252,15 @@
       key: 'report',
       value: function report(reportObj) {
         var xhr = new XMLHttpRequest();
-        xhr.onerror = function () {
-        };
+        xhr.onerror = function () {};
         xhr.open('POST', this.reportOptions.url, true);
-        xhr.send(JSON.stringify(reportObj));
+
+        var requestBody = reportObj;
+        if (this.reportOptions.beforeSend && this.reportOptions.beforeSend instanceof Function) {
+          requestBody = this.reportOptions.beforeSend.call(null, reportObj);
+        }
+
+        xhr.send(JSON.stringify(requestBody));
       }
     }]);
     return SmartLog;
@@ -268,4 +281,3 @@
   return SmartLog;
 
 })));
-//# sourceMappingURL=smart-log.js.map

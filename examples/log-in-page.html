@@ -22,14 +22,12 @@
   });
   SmartLog.disableConsoleOutput();
 
-  // Do some work
-  const arr = Array.of(1, 2, 3, 4, 5);
-  arr.forEach(item => {
-    SmartLog.info(item, {x: 2, z: 5});
+
+  SmartLog.patchData({
+    version: '1.1.1'
   });
 
   document.getElementById('btn').addEventListener('click', () => {
-    myData.userId = Number.parseInt(Math.random() * 100);
     ppp.a = 2;
   });
 </script>

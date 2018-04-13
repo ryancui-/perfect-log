@@ -6,7 +6,6 @@ const pkg = require('./package');
 const now = new Date();
 const banner = `/*!
  * Smart log v${pkg.version}
- * https://github.com/${pkg.repository}
  *
  * Copyright (c) 2018-${now.getFullYear()} ${pkg.author.name}
  * Released under the ${pkg.license} license
