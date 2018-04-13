@@ -17,7 +17,7 @@ This package is designed for **browser** end.
 Smart Log can be integrated into many frameworks like Vue, Angular and so on because it just like a global object.
 
 ```bash
-$ npm i -S smart-log
+$ npm i -S @ryancui-/smart-log
 ```
 
 After installation, import it **at the most beginning** and bind it to `window`.
