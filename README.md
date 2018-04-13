@@ -23,7 +23,7 @@ $ npm i -S @ryancui-/smart-log
 After installation, import it **at the most beginning** and bind it to `window`.
 
 ```javascript
-import SmartLog from 'smart-log';
+import SmartLog from '@ryancui-/smart-log';
 
 // Do some configurations
 SmartLog.enableReport()
