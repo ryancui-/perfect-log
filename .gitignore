@@ -4,3 +4,5 @@ package-lock.json
 .idea
 node_modules
 dist/*.map
+
+.DS_Store
