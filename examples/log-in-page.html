@@ -16,9 +16,13 @@
   };
 
   SmartLog.enableReport({
-    url: 'http://localhost/aaaaa',
+    url: 'http://localhost/receive',
+    level: 'INFO',
     data: myData,
-    level: 'INFO'
+    beforeSend: (json) => {
+      json.userId = json.data.userId;
+      return json;
+    }
   });
   SmartLog.disableConsoleOutput();
 
