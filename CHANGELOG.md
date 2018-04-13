@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.0.2-beta.2 (2018-04-13)
+
+- Fix issue at previous version
+
 ### 0.0.2-beta.1 (2018-04-13)
 
 - Use beta version to prevent incresing version too soon
