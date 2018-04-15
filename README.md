@@ -1,5 +1,9 @@
 # Smart Log
 
+[![Build Status](https://img.shields.io/travis/ryancui-/smart-log/master.svg?style=flat-square)](https://travis-ci.org/ryancui-/smart-log.svg?branch=master)
+[![npm](https://img.shields.io/npm/v/@ryancui-/smart-log.svg?colorB=brightgreen&style=flat-square)](https://www.npmjs.com/package/@ryancui-/smart-log)
+[![npm download times](https://img.shields.io/npm/dm/@ryancui-/smart-log.svg)](https://www.npmjs.com/package/@ryancui-/smart-log)
+
 ##### English | <a href="#chinese">中文</a><a id="english"></a>
 
 ## Overview
@@ -14,27 +18,26 @@ This package is designed for **browser** end.
 
 #### npm
 
-Smart Log can be integrated into many frameworks like Vue, Angular and so on because it just like a global object.
-
 ```bash
 $ npm i -S @ryancui-/smart-log
 ```
 
-After installation, import it **at the most beginning** and bind it to `window`.
+After installation, import it **at the most beginning**.
 
 ```javascript
 import SmartLog from '@ryancui-/smart-log';
 
 // Do some configurations
-SmartLog.enableReport()
-
-// Make it global
-window.SmartLog = SmartLog;
+SmartLog.enableReport({
+  url: 'url'
+});
 ```
 
 Then, you can use `SmartLog` anywhere in your code.
 
 ```javascript
+import SmartLog from '@ryancui-/smart-log';
+
 this.http.post('/url', {id: 1}).then(data => {
    SmartLog.debug(data); 
 });
