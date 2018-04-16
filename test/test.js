@@ -161,7 +161,7 @@ describe('Report service', () => {
     expect(fn).toHaveBeenCalled();
   });
 
-  test('should report later add data', async () => {
+  test('should patch data in one parameter call', async () => {
     const fn = jest.fn();
     await page.setRequestInterception(true);
     page.on('request', req => {
@@ -185,6 +185,37 @@ describe('Report service', () => {
       });
 
       PerfectLog.patchData({x: 3, z: '4'});
+      PerfectLog.error(new Error(1));
+    });
+    expect(fn).toHaveBeenCalled();
+  });
+
+  test('should patch data in two parameter call', async () => {
+    const fn = jest.fn();
+    await page.setRequestInterception(true);
+    page.on('request', req => {
+      fn();
+      const json = JSON.parse(req.postData());
+      expect(json.data).toBeDefined();
+      expect(json.data.x).toBe(3);
+      expect(json.data.y).toBe('2');
+      expect(json.data.z).toBe('4');
+
+      req.abort();
+    });
+
+    await page.evaluate(() => {
+      PerfectLog.enableReport({
+        url: 'http://localhost/test',
+        data: {
+          x: 1,
+          y: '2'
+        }
+      });
+
+      PerfectLog.patchData('x', 3);
+      PerfectLog.patchData('z', '4');
+
       PerfectLog.error(new Error(1));
     });
     expect(fn).toHaveBeenCalled();

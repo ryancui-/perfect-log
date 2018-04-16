@@ -4,7 +4,6 @@ const wrapLog = (method, level, color) =>
 let wrapDebug, wrapInfo, wrapError;
 
 export default class PerfectLog {
-
   /**
    * Initialize SmartLog with default behaviour
    */
@@ -50,16 +49,16 @@ export default class PerfectLog {
     this.debug = (...arg) => {
       wrapDebug(...arg);
       if (this.reportOptions.levelNumber >= 3) {
-        const reportObj = this.buildReportScheme('DEBUG', JSON.stringify(arg));
-        this.report(reportObj);
+        const reportObj = this._buildReportScheme('DEBUG', this._buildReportMsg(arg));
+        this._report(reportObj);
       }
     };
 
     this.info = (...arg) => {
       wrapInfo(...arg);
       if (this.reportOptions.levelNumber >= 2) {
-        const reportObj = this.buildReportScheme('INFO', JSON.stringify(arg));
-        this.report(reportObj);
+        const reportObj = this._buildReportScheme('INFO', this._buildReportMsg(arg));
+        this._report(reportObj);
       }
     };
 
@@ -69,12 +68,12 @@ export default class PerfectLog {
         let reportObj;
 
         if (arg.length === 1 && arg[0] instanceof Error) {
-          reportObj = this.buildReportScheme('ERROR', '', arg[0]);
+          reportObj = this._buildReportScheme('ERROR', '', arg[0]);
         } else {
-          reportObj = this.buildReportScheme('ERROR', JSON.stringify(arg));
+          reportObj = this._buildReportScheme('ERROR', this._buildReportMsg(arg));
         }
 
-        this.report(reportObj);
+        this._report(reportObj);
       }
     };
   }
@@ -109,7 +108,6 @@ export default class PerfectLog {
 
   /**
    * Disable console output
-   *
    */
   static disableConsoleOutput() {
     this.consoleOutput = false;
@@ -131,22 +129,17 @@ export default class PerfectLog {
   /**
    * Patch user defined data
    */
-  static patchData(data) {
-    if (data && data instanceof Object) {
-      this.reportOptions.data = Object.assign({}, this.reportOptions.data, data);
+  static patchData(data, value) {
+    let merge = {};
+    if (data && value && (typeof data === 'string' || data instanceof String)) {
+      merge[data] = value;
+    } else if (data && data instanceof Object) {
+      merge = data;
     }
+    this.reportOptions.data = Object.assign({}, this.reportOptions.data, merge);
   }
 
-  /**
-   * Build the schema which would be sent to backend
-   *
-   * @param level Log level
-   * @param msg Message
-   * @param err Error object
-   *
-   * @return {{level: *, msg: *, time: Date, data: null|*, platform: {browser: string}}}
-   */
-  static buildReportScheme(level, msg, error = null) {
+  static _buildReportScheme(level, msg, error = null) {
     const scheme = {
       level, msg, error,
       time: new Date().toISOString(),
@@ -159,12 +152,7 @@ export default class PerfectLog {
     return scheme;
   }
 
-  /**
-   * Send log info to backend service
-   *
-   * @param reportObj Log info scheme object
-   */
-  static report(reportObj) {
+  static _report(reportObj) {
     const xhr = new XMLHttpRequest();
     xhr.onerror = () => {
     };
@@ -177,5 +165,9 @@ export default class PerfectLog {
     }
 
     xhr.send(JSON.stringify(requestBody));
+  }
+
+  static _buildReportMsg(array) {
+    return array.map(i => JSON.stringify(i)).join(', ');
   }
 }

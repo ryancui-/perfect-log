@@ -1,8 +1,10 @@
 {
   "name": "perfect-log",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.2",
   "description": "A front-end logging tools",
   "main": "dist/perfect-log.common.js",
+  "module": "dist/perfect-log.esm.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "dev": "rollup -c -m -w",
     "build": "rollup -c",
@@ -14,7 +16,8 @@
   },
   "files": [
     "src",
-    "dist"
+    "dist",
+    "types"
   ],
   "keywords": [
     "log",

@@ -4,9 +4,9 @@
 [![npm](https://img.shields.io/npm/v/perfect-log.svg?colorB=brightgreen&style=flat-square)](https://www.npmjs.com/package/perfect-log)
 [![npm download times](https://img.shields.io/npm/dm/perfect-log.svg)](https://www.npmjs.com/package/perfect-log)
 
-## Overview
+[中文](README-zh.md)
 
-- [中文](README-zh.md)
+## Overview
 
 Provide a set of log tools and help to get rid of using `console.log` in the source code. Control the output between develop and production environment.
 

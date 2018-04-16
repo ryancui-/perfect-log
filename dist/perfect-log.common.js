@@ -1,10 +1,10 @@
 /*!
- * perfect-log v0.0.1-beta.1
+ * perfect-log v0.0.1-beta.2
  *
  * Copyright (c) 2018-2018 ryancui-
  * Released under the MIT license
  *
- * Date: 2018-04-16T01:43:15.000Z
+ * Date: 2018-04-16T05:07:30.636Z
  */
 
 'use strict';
@@ -48,7 +48,6 @@ var PerfectLog = function () {
 
   createClass(PerfectLog, null, [{
     key: 'initialize',
-
 
     /**
      * Initialize SmartLog with default behaviour
@@ -106,8 +105,8 @@ var PerfectLog = function () {
 
         wrapDebug.apply(undefined, arg);
         if (_this.reportOptions.levelNumber >= 3) {
-          var reportObj = _this.buildReportScheme('DEBUG', JSON.stringify(arg));
-          _this.report(reportObj);
+          var reportObj = _this._buildReportScheme('DEBUG', _this._buildReportMsg(arg));
+          _this._report(reportObj);
         }
       };
 
@@ -118,8 +117,8 @@ var PerfectLog = function () {
 
         wrapInfo.apply(undefined, arg);
         if (_this.reportOptions.levelNumber >= 2) {
-          var reportObj = _this.buildReportScheme('INFO', JSON.stringify(arg));
-          _this.report(reportObj);
+          var reportObj = _this._buildReportScheme('INFO', _this._buildReportMsg(arg));
+          _this._report(reportObj);
         }
       };
 
@@ -133,12 +132,12 @@ var PerfectLog = function () {
           var reportObj = void 0;
 
           if (arg.length === 1 && arg[0] instanceof Error) {
-            reportObj = _this.buildReportScheme('ERROR', '', arg[0]);
+            reportObj = _this._buildReportScheme('ERROR', '', arg[0]);
           } else {
-            reportObj = _this.buildReportScheme('ERROR', JSON.stringify(arg));
+            reportObj = _this._buildReportScheme('ERROR', _this._buildReportMsg(arg));
           }
 
-          _this.report(reportObj);
+          _this._report(reportObj);
         }
       };
     }
@@ -179,7 +178,6 @@ var PerfectLog = function () {
 
     /**
      * Disable console output
-     *
      */
 
   }, {
@@ -204,25 +202,18 @@ var PerfectLog = function () {
 
   }, {
     key: 'patchData',
-    value: function patchData(data) {
-      if (data && data instanceof Object) {
-        this.reportOptions.data = Object.assign({}, this.reportOptions.data, data);
+    value: function patchData(data, value) {
+      var merge = {};
+      if (data && value && (typeof data === 'string' || data instanceof String)) {
+        merge[data] = value;
+      } else if (data && data instanceof Object) {
+        merge = data;
       }
+      this.reportOptions.data = Object.assign({}, this.reportOptions.data, merge);
     }
-
-    /**
-     * Build the schema which would be sent to backend
-     *
-     * @param level Log level
-     * @param msg Message
-     * @param err Error object
-     *
-     * @return {{level: *, msg: *, time: Date, data: null|*, platform: {browser: string}}}
-     */
-
   }, {
-    key: 'buildReportScheme',
-    value: function buildReportScheme(level, msg) {
+    key: '_buildReportScheme',
+    value: function _buildReportScheme(level, msg) {
       var error = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
       var scheme = {
@@ -236,16 +227,9 @@ var PerfectLog = function () {
 
       return scheme;
     }
-
-    /**
-     * Send log info to backend service
-     *
-     * @param reportObj Log info scheme object
-     */
-
   }, {
-    key: 'report',
-    value: function report(reportObj) {
+    key: '_report',
+    value: function _report(reportObj) {
       var xhr = new XMLHttpRequest();
       xhr.onerror = function () {};
       xhr.open('POST', this.reportOptions.url, true);
@@ -256,6 +240,13 @@ var PerfectLog = function () {
       }
 
       xhr.send(JSON.stringify(requestBody));
+    }
+  }, {
+    key: '_buildReportMsg',
+    value: function _buildReportMsg(array) {
+      return array.map(function (i) {
+        return JSON.stringify(i);
+      }).join(', ');
     }
   }]);
   return PerfectLog;

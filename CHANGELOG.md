@@ -1,5 +1,16 @@
 # Changelog
 
+### 0.0.1-beta.2 (2018-04-16)
+
+- Add TypeScript `d.ts` support
+
+### 0.0.1-beta.1 (2018-04-16)
+
+- Change package name to `perfect-log`
+- Fix an issue which will lead to `enableConsoleOut` fail
+
+> Below is the change log for package @ryancui-/smart-log, and i change package name to perfect-log later
+
 ### 0.0.2-beta.2 (2018-04-13)
 
 - Fix issue at previous version
