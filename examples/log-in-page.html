@@ -8,32 +8,9 @@
 
 <button id="btn">Generate Error</button>
 
-<script src="../dist/smart-log.js"></script>
+<script src="../dist/perfect-log.js"></script>
 <script>
-  const myData = {
-    pluginVersion: '1.1.2',
-    userId: 1
-  };
-
-  SmartLog.enableReport({
-    url: 'http://localhost/receive',
-    level: 'INFO',
-    data: myData,
-    beforeSend: (json) => {
-      json.userId = json.data.userId;
-      return json;
-    }
-  });
-  SmartLog.disableConsoleOutput();
-
-
-  SmartLog.patchData({
-    version: '1.1.1'
-  });
-
-  document.getElementById('btn').addEventListener('click', () => {
-    ppp.a = 2;
-  });
+  SmartLog.debug(123);
 </script>
 </body>
 </html>

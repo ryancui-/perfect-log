@@ -1,15 +1,5 @@
-import SmartLog from './smart-log';
+import PerfectLog from './perfect-log';
 
-// Wrap the global error handlers
-window.onerror = (msg, uri, row, col, err) => {
-  if (SmartLog.reportEnabled) {
-    const reportObj = SmartLog.buildReportScheme('ERROR', msg, uri, row, err);
-    SmartLog.report(reportObj);
-  }
+PerfectLog.initialize();
 
-  return !SmartLog.consoleOutput;
-};
-
-SmartLog.initialize();
-
-export default SmartLog;
+export default PerfectLog;

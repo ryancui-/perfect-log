@@ -1,12 +1,12 @@
-# Smart Log
+# Perfect Log
 
-[![Build Status](https://img.shields.io/travis/ryancui-/smart-log/master.svg?style=flat-square)](https://travis-ci.org/ryancui-/smart-log.svg?branch=master)
-[![npm](https://img.shields.io/npm/v/@ryancui-/smart-log.svg?colorB=brightgreen&style=flat-square)](https://www.npmjs.com/package/@ryancui-/smart-log)
-[![npm download times](https://img.shields.io/npm/dm/@ryancui-/smart-log.svg)](https://www.npmjs.com/package/@ryancui-/smart-log)
-
-##### English | <a href="#chinese">中文</a><a id="english"></a>
+[![Build Status](https://img.shields.io/travis/ryancui-/perfect-log/master.svg?style=flat-square)](https://travis-ci.org/ryancui-/perfect-log.svg?branch=master)
+[![npm](https://img.shields.io/npm/v/perfect-log.svg?colorB=brightgreen&style=flat-square)](https://www.npmjs.com/package/perfect-log)
+[![npm download times](https://img.shields.io/npm/dm/perfect-log.svg)](https://www.npmjs.com/package/perfect-log)
 
 ## Overview
+
+- [中文](README-zh.md)
 
 Provide a set of log tools and help to get rid of using `console.log` in the source code. Control the output between develop and production environment.
 
@@ -19,73 +19,73 @@ This package is designed for **browser** end.
 #### npm
 
 ```bash
-$ npm i -S @ryancui-/smart-log
+$ npm i -S perfect-log
 ```
 
 After installation, import it **at the most beginning**.
 
 ```javascript
-import SmartLog from '@ryancui-/smart-log';
+import PerfectLog from 'perfect-log';
 
 // Do some configurations
-SmartLog.enableReport({
+PerfectLog.enableReport({
   url: 'url'
 });
 ```
 
-Then, you can use `SmartLog` anywhere in your code.
+Then, you can use `PerfectLog` anywhere in your code.
 
 ```javascript
-import SmartLog from '@ryancui-/smart-log';
+import PerfectLog from 'perfect-log';
 
 this.http.post('/url', {id: 1}).then(data => {
-   SmartLog.debug(data); 
+  PerfectLog.debug(data); 
 });
 ```
 
 #### Script
 
-Directly download `dist/smart-log.js` and include it in your page **before any other scripts**. Everything works.
+Directly download `dist/perfect-log.js` and include it in your page **before any other scripts**. Everything works.
 
 ```html
-<script src="smart-log.js"></script>
+<script src="perfect-log.js"></script>
 <script src="other.js"></script>
 ```
 
-## Usage
+## API
 
-#### SmartLog.debug(...arg)
+#### PerfectLog.debug(...arg)
 
 Wrapper for `console.log`, use it like `console.log`.
 
 ```javascript
-SmartLog.debug(1, 2, 3);
-SmartLog.debug(document.body);
-SmartLog.debug({x: 1, y: 2});
+PerfectLog.debug(1, 2, 3);
+PerfectLog.debug(document.body);
+PerfectLog.debug({x: 1, y: 2});
 ```
 
-#### SmartLog.info(...arg)
+#### PerfectLog.info(...arg)
 
 Wrapper for `console.info`, use it like `console.info`.
 
-#### SmartLog.error(...arg)
+#### PerfectLog.error(...arg)
 
 Wrapper for `console.error`, use it like `console.error`.
 
-#### SmartLog.enableConsoleOut()
+#### PerfectLog.enableConsoleOut()
 
 Allow log info be printed in devtool console.
 
-#### SmartLog.disableConsoleOut()
+#### PerfectLog.disableConsoleOut()
 
 Nothing would be printed in devtools console.
 
-#### SmartLog.enableReport(options: object)
+#### PerfectLog.enableReport(options: object)
 
 Enable the report module. According the options, log info would be sent to a backend service using `POST`.
 
 ```javascript
-SmartLog.enableReport({
+PerfectLog.enableReport({
   url: 'http://some.host/received',
   level: 'INFO',
   data: {
@@ -107,7 +107,7 @@ Details in `options`
 | data  | Any specified data you want to send to the backend along with the log. |     |
 | beforeSend | Provide a function to transform log info schema into anything you want before sneding to backend. | |
 
-#### SmartLog.patchData(data: object)
+#### PerfectLog.patchData(data: object)
 
 Add user defined data anywhere before report the log.
 
@@ -124,9 +124,7 @@ The data sent to backend is a JSON format defined below:
     "pluginVersion": "1.1.2",
     "userId": 1
   },
-  "row": 33,
-  "stack": "ReferenceError: ppp is not defined↵    at HTMLButtonElement.document ...",
-  "uri": "http://localhost:63343/smart-log/examples/log-in-page.html?_ijt=9osog379isnpgj3tma19scjusk",
+  "error": Error
   "platform": {
     "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"
   }
@@ -137,15 +135,10 @@ The data sent to backend is a JSON format defined below:
 - `msg` - Message
 - `time` - UTC Time
 - `data` - Your own defined data
-- `row` - Exist when log level is `ERROR`, indicates the error line number
-- `stack` - Exist when log level is `ERROR`, the string of `err.stack`
-- `uri` - Exist when log level is `ERROR`, the error file position
+- `error` - Exist on level ERROR, representing the JavaScript Error object
 - `platform` - An object about platform: `browser` is `navigator.userAgent`
 
 ## Lisence
 
 MIT Lisence.
 
-##### 中文 | <a href="#english">English</a><a id="chinese"></a>
-
-亟待完善。

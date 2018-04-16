@@ -1,16 +1,16 @@
 /*!
- * Smart log v0.0.2-beta.2
+ * perfect-log v0.0.1-beta.1
  *
  * Copyright (c) 2018-2018 ryancui-
  * Released under the MIT license
  *
- * Date: 2018-04-13T08:20:53.347Z
+ * Date: 2018-04-16T01:43:15.000Z
  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global.SmartLog = factory());
+    (global.PerfectLog = factory());
 }(this, (function () { 'use strict';
 
   var classCallCheck = function (instance, Constructor) {
@@ -45,18 +45,17 @@
       wrapInfo = void 0,
       wrapError = void 0;
 
-  var SmartLog = function () {
-    function SmartLog() {
-      classCallCheck(this, SmartLog);
+  var PerfectLog = function () {
+    function PerfectLog() {
+      classCallCheck(this, PerfectLog);
     }
 
-    createClass(SmartLog, null, [{
+    createClass(PerfectLog, null, [{
       key: 'initialize',
 
 
       /**
        * Initialize SmartLog with default behaviour
-       *
        */
       value: function initialize() {
         this.enableConsoleOutput();
@@ -138,7 +137,7 @@
             var reportObj = void 0;
 
             if (arg.length === 1 && arg[0] instanceof Error) {
-              reportObj = _this.buildReportScheme('ERROR', null, null, null, arg[0]);
+              reportObj = _this.buildReportScheme('ERROR', '', arg[0]);
             } else {
               reportObj = _this.buildReportScheme('ERROR', JSON.stringify(arg));
             }
@@ -150,7 +149,6 @@
 
       /**
        * Disable report
-       *
        */
 
     }, {
@@ -165,7 +163,6 @@
 
       /**
        * Enable console output
-       *
        */
 
     }, {
@@ -176,6 +173,12 @@
         wrapDebug = wrapLog('log', 'DEBUG', 'green');
         wrapInfo = wrapLog('info', 'INFO', 'blue');
         wrapError = wrapLog('error', 'ERROR', 'red');
+
+        if (!this.reportEnabled) {
+          this.debug = wrapDebug;
+          this.info = wrapInfo;
+          this.error = wrapError;
+        }
       }
 
       /**
@@ -201,7 +204,6 @@
 
       /**
        * Patch user defined data
-       *
        */
 
     }, {
@@ -213,12 +215,10 @@
       }
 
       /**
-       * Build the scheme object which would be sent to backend
+       * Build the schema which would be sent to backend
        *
        * @param level Log level
        * @param msg Message
-       * @param uri Error file
-       * @param row Line number of the error file
        * @param err Error object
        *
        * @return {{level: *, msg: *, time: Date, data: null|*, platform: {browser: string}}}
@@ -227,41 +227,16 @@
     }, {
       key: 'buildReportScheme',
       value: function buildReportScheme(level, msg) {
-        var uri = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-        var row = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-        var err = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+        var error = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
         var scheme = {
-          level: level, msg: msg,
+          level: level, msg: msg, error: error,
           time: new Date().toISOString(),
           data: this.reportOptions.data,
           platform: {
             browser: navigator.userAgent
           }
         };
-
-        if (err) {
-          var originStack = err.stack || err.stacktree || '';
-          scheme.stack = originStack;
-
-          if (msg === null) {
-            scheme.msg = err.stack.split('\n')[0];
-          }
-
-          if (uri === null) {
-            var match = err.stack.match(/at(.*):\d+:\d+/);
-            scheme.uri = match ? match[1] : '';
-          } else {
-            scheme.uri = uri;
-          }
-
-          if (row === null) {
-            var _match = err.stack.match(/:(\d+):\d+/);
-            scheme.row = _match ? _match[1] : '';
-          } else {
-            scheme.row = row;
-          }
-        }
 
         return scheme;
       }
@@ -287,21 +262,11 @@
         xhr.send(JSON.stringify(requestBody));
       }
     }]);
-    return SmartLog;
+    return PerfectLog;
   }();
 
-  // Wrap the global error handlers
-  window.onerror = function (msg, uri, row, col, err) {
-    if (SmartLog.reportEnabled) {
-      var reportObj = SmartLog.buildReportScheme('ERROR', msg, uri, row, err);
-      SmartLog.report(reportObj);
-    }
+  PerfectLog.initialize();
 
-    return !SmartLog.consoleOutput;
-  };
-
-  SmartLog.initialize();
-
-  return SmartLog;
+  return PerfectLog;
 
 })));

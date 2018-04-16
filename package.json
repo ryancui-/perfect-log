@@ -1,8 +1,8 @@
 {
-  "name": "@ryancui-/smart-log",
-  "version": "0.0.2-beta.2",
+  "name": "perfect-log",
+  "version": "0.0.1-beta.1",
   "description": "A front-end logging tools",
-  "main": "dist/smart-log.common.js",
+  "main": "dist/perfect-log.common.js",
   "scripts": {
     "dev": "rollup -c -m -w",
     "build": "rollup -c",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ryancui-/smart-log.git"
+    "url": "git+https://github.com/ryancui-/perfect-log.git"
   },
   "files": [
     "src",
@@ -18,7 +18,8 @@
   ],
   "keywords": [
     "log",
-    "smart-log"
+    "logger",
+    "perfect-log"
   ],
   "author": {
     "name": "ryancui-",
@@ -28,11 +29,13 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "jest": "^22.4.3",
     "puppeteer": "^1.3.0",
     "rollup": "^0.57.1",
     "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-commonjs": "^9.1.0",
     "rollup-plugin-node-resolve": "^3.3.0"
   },
   "jest": {

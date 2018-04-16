@@ -3,11 +3,10 @@ const wrapLog = (method, level, color) =>
 
 let wrapDebug, wrapInfo, wrapError;
 
-export default class SmartLog {
+export default class PerfectLog {
 
   /**
    * Initialize SmartLog with default behaviour
-   *
    */
   static initialize() {
     this.enableConsoleOutput();
@@ -70,7 +69,7 @@ export default class SmartLog {
         let reportObj;
 
         if (arg.length === 1 && arg[0] instanceof Error) {
-          reportObj = this.buildReportScheme('ERROR', null, null, null, arg[0]);
+          reportObj = this.buildReportScheme('ERROR', '', arg[0]);
         } else {
           reportObj = this.buildReportScheme('ERROR', JSON.stringify(arg));
         }
@@ -82,7 +81,6 @@ export default class SmartLog {
 
   /**
    * Disable report
-   *
    */
   static disableReport() {
     this.reportEnabled = false;
@@ -94,7 +92,6 @@ export default class SmartLog {
 
   /**
    * Enable console output
-   *
    */
   static enableConsoleOutput() {
     this.consoleOutput = true;
@@ -102,6 +99,12 @@ export default class SmartLog {
     wrapDebug = wrapLog('log', 'DEBUG', 'green');
     wrapInfo = wrapLog('info', 'INFO', 'blue');
     wrapError = wrapLog('error', 'ERROR', 'red');
+
+    if (!this.reportEnabled) {
+      this.debug = wrapDebug;
+      this.info = wrapInfo;
+      this.error = wrapError;
+    }
   }
 
   /**
@@ -127,7 +130,6 @@ export default class SmartLog {
 
   /**
    * Patch user defined data
-   *
    */
   static patchData(data) {
     if (data && data instanceof Object) {
@@ -136,48 +138,23 @@ export default class SmartLog {
   }
 
   /**
-   * Build the scheme object which would be sent to backend
+   * Build the schema which would be sent to backend
    *
    * @param level Log level
    * @param msg Message
-   * @param uri Error file
-   * @param row Line number of the error file
    * @param err Error object
    *
    * @return {{level: *, msg: *, time: Date, data: null|*, platform: {browser: string}}}
    */
-  static buildReportScheme(level, msg, uri = '', row = 0, err = null) {
+  static buildReportScheme(level, msg, error = null) {
     const scheme = {
-      level, msg,
+      level, msg, error,
       time: new Date().toISOString(),
       data: this.reportOptions.data,
       platform: {
         browser: navigator.userAgent
       }
     };
-
-    if (err) {
-      const originStack = err.stack || err.stacktree || '';
-      scheme.stack = originStack;
-
-      if (msg === null) {
-        scheme.msg = err.stack.split('\n')[0];
-      }
-
-      if (uri === null) {
-        const match = err.stack.match(/at(.*):\d+:\d+/);
-        scheme.uri = match ? match[1] : '';
-      } else {
-        scheme.uri = uri;
-      }
-
-      if (row === null) {
-        const match = err.stack.match(/:(\d+):\d+/);
-        scheme.row = match ? match[1] : '';
-      } else {
-        scheme.row = row;
-      }
-    }
 
     return scheme;
   }

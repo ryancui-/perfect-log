@@ -5,7 +5,7 @@ const pkg = require('./package');
 
 const now = new Date();
 const banner = `/*!
- * Smart log v${pkg.version}
+ * ${pkg.name} v${pkg.version}
  *
  * Copyright (c) 2018-${now.getFullYear()} ${pkg.author.name}
  * Released under the ${pkg.license} license
@@ -18,16 +18,16 @@ module.exports = {
   input: 'src/index.js',
   output: [{
     banner,
-    file: 'dist/smart-log.js',
+    file: `dist/${pkg.name}.js`,
     format: 'umd',
-    name: 'SmartLog',
+    name: 'PerfectLog',
   }, {
     banner,
-    file: 'dist/smart-log.common.js',
+    file: `dist/${pkg.name}.common.js`,
     format: 'cjs',
   }, {
     banner,
-    file: 'dist/smart-log.esm.js',
+    file: `dist/${pkg.name}.esm.js`,
     format: 'es',
   }],
   context: 'window',

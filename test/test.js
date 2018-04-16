@@ -9,7 +9,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   page = await browser.newPage();
-  await page.addScriptTag({path: 'dist/smart-log.js'});
+  await page.addScriptTag({path: 'dist/perfect-log.js'});
 });
 
 afterEach(async () => {
@@ -29,8 +29,8 @@ describe('Console output enable/disable', () => {
     });
 
     await page.evaluate(() => {
-      SmartLog.enableConsoleOutput();
-      SmartLog.debug('debug info');
+      PerfectLog.enableConsoleOutput();
+      PerfectLog.debug('debug info');
     });
 
     expect(fn).toHaveBeenCalled();
@@ -41,11 +41,28 @@ describe('Console output enable/disable', () => {
     page.on('console', fn);
 
     await page.evaluate(() => {
-      SmartLog.disableConsoleOutput();
-      SmartLog.debug('debug info');
+      PerfectLog.disableConsoleOutput();
+      PerfectLog.debug('debug info');
     });
 
     expect(fn).not.toHaveBeenCalled();
+  });
+
+  test('should enable console output after disable report', async () => {
+    const fn = jest.fn();
+    page.on('console', msg => {
+      fn();
+      expect(msg.type()).toBe('log');
+    });
+
+    await page.evaluate(() => {
+      PerfectLog.disableConsoleOutput();
+      PerfectLog.disableReport();
+      PerfectLog.enableConsoleOutput();
+      PerfectLog.debug('debug info');
+    });
+
+    expect(fn).toHaveBeenCalled();
   });
 });
 
@@ -62,17 +79,16 @@ describe('Report service', () => {
       expect(json.level).toBe('ERROR');
       expect(json.msg).toBeDefined();
       expect(json.time).toBeDefined();
-      expect(json.uri).toBeDefined();
-      expect(json.row).toBeDefined();
+      expect(json.error).toBeDefined();
 
       req.abort();
     });
 
     await page.evaluate(() => {
-      SmartLog.enableReport({
+      PerfectLog.enableReport({
         url: 'http://localhost/test'
       });
-      SmartLog.error(new Error(1));
+      PerfectLog.error(new Error(1));
     });
     expect(fn).toHaveBeenCalled();
   });
@@ -89,11 +105,11 @@ describe('Report service', () => {
     });
 
     await page.evaluate(() => {
-      SmartLog.enableReport({
+      PerfectLog.enableReport({
         url: 'http://localhost/test'
       });
-      SmartLog.disableConsoleOutput();
-      SmartLog.error(new Error(1));
+      PerfectLog.disableConsoleOutput();
+      PerfectLog.error(new Error(1));
     });
     expect(fn).toHaveBeenCalled();
   });
@@ -110,11 +126,11 @@ describe('Report service', () => {
     });
 
     await page.evaluate(() => {
-      SmartLog.enableReport({
+      PerfectLog.enableReport({
         url: 'http://localhost/test',
         level: 'INFO'
       });
-      SmartLog.info(1);
+      PerfectLog.info(1);
     });
     expect(fn).toHaveBeenCalled();
   });
@@ -133,14 +149,14 @@ describe('Report service', () => {
     });
 
     await page.evaluate(() => {
-      SmartLog.enableReport({
+      PerfectLog.enableReport({
         url: 'http://localhost/test',
         data: {
           x: 1,
           y: '2'
         }
       });
-      SmartLog.error(new Error(1));
+      PerfectLog.error(new Error(1));
     });
     expect(fn).toHaveBeenCalled();
   });
@@ -160,7 +176,7 @@ describe('Report service', () => {
     });
 
     await page.evaluate(() => {
-      SmartLog.enableReport({
+      PerfectLog.enableReport({
         url: 'http://localhost/test',
         data: {
           x: 1,
@@ -168,8 +184,8 @@ describe('Report service', () => {
         }
       });
 
-      SmartLog.patchData({x: 3, z: '4'});
-      SmartLog.error(new Error(1));
+      PerfectLog.patchData({x: 3, z: '4'});
+      PerfectLog.error(new Error(1));
     });
     expect(fn).toHaveBeenCalled();
   });
@@ -186,7 +202,7 @@ describe('Report service', () => {
     });
 
     await page.evaluate(() => {
-      SmartLog.enableReport({
+      PerfectLog.enableReport({
         url: 'http://localhost/test',
         data: {x: 1},
         beforeSend: (log) => {
@@ -194,7 +210,7 @@ describe('Report service', () => {
           return log;
         }
       });
-      SmartLog.error(new Error(1));
+      PerfectLog.error(new Error(1));
     });
     expect(fn).toHaveBeenCalled();
   });
