@@ -1,9 +1,5 @@
 declare namespace PerfectLog {
-  export enum LogLevel {
-    Debug = 'DEBUG',
-    Info = 'INFO',
-    Error = 'ERROR'
-  }
+  export type LogLevel = 'DEBUG' | 'INFO' | 'ERROR';
 
   export interface LogInfo {
     level: LogLevel;
@@ -48,5 +44,5 @@ declare class PerfectLog {
 }
 
 declare module 'perfect-log' {
-  export default PerfectLog;
+  export default new PerfectLog();
 }
