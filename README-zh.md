@@ -70,11 +70,11 @@ PerfectLog.debug({x: 1, y: 2});
 
 `console.error` 的包装方法，用法与 `console.error` 相同。
 
-#### PerfectLog.enableConsoleOut()
+#### PerfectLog.enableConsoleOutput()
 
 包装方法会调用实际的 `console.*` 方法，向控制台打印 Log.
 
-#### PerfectLog.disableConsoleOut()
+#### PerfectLog.disableConsoleOutput()
 
 包装方法不会调用 `console.*` 方法，不打印 Log.
 

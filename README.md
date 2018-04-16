@@ -72,11 +72,11 @@ Wrapper for `console.info`, use it like `console.info`.
 
 Wrapper for `console.error`, use it like `console.error`.
 
-#### PerfectLog.enableConsoleOut()
+#### PerfectLog.enableConsoleOutput()
 
 Allow log info be printed in devtool console.
 
-#### PerfectLog.disableConsoleOut()
+#### PerfectLog.disableConsoleOutput()
 
 Nothing would be printed in devtools console.
 
