@@ -44,5 +44,6 @@ declare class PerfectLog {
 }
 
 declare module 'perfect-log' {
-  export default new PerfectLog();
+  const _init: PerfectLog;
+  export default _init;
 }
