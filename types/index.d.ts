@@ -32,6 +32,10 @@ declare class PerfectLog {
 
   disableReport(): void;
 
+  enableConsoleOutput(): void;
+
+  disableConsoleOutput(): void;
+
   patchData(data: object): void;
   patchData(key: string, value: object): void;
 

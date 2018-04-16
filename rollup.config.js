@@ -1,4 +1,3 @@
-import resolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
 
 const pkg = require('./package');
@@ -30,14 +29,10 @@ module.exports = {
     file: `dist/${pkg.name}.esm.js`,
     format: 'es',
   }],
-  context: 'window',
   plugins: [
-    resolve({
-      jsnext: true,
-      browser: true
-    }),
     babel({
-      exclude: 'node_modules/**'
+      exclude: 'node_modules/**',
+      plugins: ['external-helpers'],
     })
-  ],
+  ]
 };
