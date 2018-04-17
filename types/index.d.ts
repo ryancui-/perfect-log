@@ -17,7 +17,7 @@ declare namespace PerfectLog {
     level?: LogLevel;
     data?: object;
 
-    beforeSend?(logInfo: LogInfo): LogInfo;
+    beforeSend?(logInfo: LogInfo): any;
   }
 }
 
