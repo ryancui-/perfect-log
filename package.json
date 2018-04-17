@@ -1,6 +1,6 @@
 {
   "name": "perfect-log",
-  "version": "0.0.2.beta.1",
+  "version": "0.0.2-beta.1",
   "description": "A front-end logging tools",
   "main": "dist/perfect-log.common.js",
   "module": "dist/perfect-log.esm.js",
