@@ -2,15 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Log in page</title>
+  <title>Demo</title>
 </head>
 <body>
 
 <button id="btn">Generate Error</button>
 
-<script src="../dist/perfect-log.js"></script>
+<script src="../dist/perfect-log.min.js"></script>
 <script>
-  SmartLog.debug(123);
+  window.onerror = (v1, v2, v3, v4, err) => {
+    PerfectLog.error(err);
+    return true;
+  };
+
+  PerfectLog.debug(123);
+
+  document.getElementById('btn').addEventListener('click', () => {
+    x.y = 1;
+  });
 </script>
 </body>
 </html>

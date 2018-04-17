@@ -6,8 +6,10 @@
   "module": "dist/perfect-log.esm.js",
   "types": "types/index.d.ts",
   "scripts": {
-    "dev": "rollup -c -m -w",
-    "build": "rollup -c",
+    "dev": "rollup -c build/rollup.base.js -m -w",
+    "build": "npm run build:base && npm run build:min",
+    "build:min": "rollup -c build/rollup.min.js",
+    "build:base": "rollup -c build/rollup.base.js",
     "test": "jest"
   },
   "repository": {
@@ -39,7 +41,8 @@
     "rollup": "^0.57.1",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^9.1.0",
-    "rollup-plugin-node-resolve": "^3.3.0"
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-uglify": "^3.0.0"
   },
   "jest": {
     "verbose": true,

@@ -1,10 +1,10 @@
 /*!
- * perfect-log v0.0.1-beta.2
+ * perfect-log v0.0.1-beta.5
  *
  * Copyright (c) 2018-2018 ryancui-
  * Released under the MIT license
  *
- * Date: 2018-04-16T08:51:00.706Z
+ * Date: 2018-04-17T02:24:21.226Z
  */
 
 'use strict';
