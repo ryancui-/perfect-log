@@ -114,14 +114,11 @@ describe('Report service', () => {
     expect(fn).toHaveBeenCalled();
   });
 
-  test('should report info level log', async () => {
+  test('should report info/error level log', async () => {
     const fn = jest.fn();
     await page.setRequestInterception(true);
     page.on('request', req => {
       fn();
-      const json = JSON.parse(req.postData());
-      expect(json.level).toBe('INFO');
-
       req.abort();
     });
 
@@ -131,8 +128,29 @@ describe('Report service', () => {
         level: 'INFO'
       });
       PerfectLog.info(1);
+      PerfectLog.error(2);
     });
-    expect(fn).toHaveBeenCalled();
+    expect(fn).toHaveBeenCalledTimes(2);
+  });
+
+  test('should report debug/info/error level log', async () => {
+    const fn = jest.fn();
+    await page.setRequestInterception(true);
+    page.on('request', req => {
+      fn();
+      req.abort();
+    });
+
+    await page.evaluate(() => {
+      PerfectLog.enableReport({
+        url: 'http://localhost/test',
+        level: 'DEBUG'
+      });
+      PerfectLog.debug(1);
+      PerfectLog.info(2);
+      PerfectLog.error(3);
+    });
+    expect(fn).toHaveBeenCalledTimes(3);
   });
 
   test('should report user data', async () => {
@@ -246,4 +264,3 @@ describe('Report service', () => {
     expect(fn).toHaveBeenCalled();
   });
 });
-

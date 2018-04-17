@@ -1,10 +1,10 @@
 /*!
- * perfect-log v0.0.1-beta.5
+ * perfect-log v0.0.1
  *
  * Copyright (c) 2018-2018 ryancui-
  * Released under the MIT license
  *
- * Date: 2018-04-17T02:24:21.226Z
+ * Date: 2018-04-17T06:39:05.171Z
  */
 
 (function (global, factory) {
@@ -12,6 +12,15 @@
   typeof define === 'function' && define.amd ? define(factory) :
   (global.PerfectLog = factory());
 }(this, (function () { 'use strict';
+
+  var wrapConsoleMethod = function wrapConsoleMethod(method, level, color) {
+    return console[method].bind(window.console, '%c[' + level + ']%c', 'color: ' + color, 'color:black');
+  };
+
+  var wrapConsoleDebug = wrapConsoleMethod('log', 'DEBUG', 'green');
+  var wrapConsoleInfo = wrapConsoleMethod('info', 'INFO', 'blue');
+  var wrapConsoleError = wrapConsoleMethod('error', 'ERROR', 'red');
+  var wrapEmptyFn = function wrapEmptyFn() {};
 
   var classCallCheck = function (instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -37,9 +46,46 @@
     };
   }();
 
-  var wrapLog = function wrapLog(method, level, color) {
-    return console[method].bind(window.console, '%c[' + level + ']%c', 'color: ' + color, 'color:black');
+  var LEVEL_DEFINITION = {
+    'DEBUG': {
+      level: 1,
+      color: 'green'
+    },
+    'INFO': {
+      level: 2,
+      color: 'blue'
+    },
+    'ERROR': {
+      level: 3,
+      color: 'red'
+    }
   };
+
+  var LogLevel = function () {
+    function LogLevel(levelText, level, color) {
+      classCallCheck(this, LogLevel);
+
+      if (!LEVEL_DEFINITION[levelText]) {
+        throw new Error();
+      }
+
+      this.levelText = levelText;
+      this.level = level || LEVEL_DEFINITION[levelText].level;
+      this.color = color || LEVEL_DEFINITION[levelText].color;
+    }
+
+    createClass(LogLevel, [{
+      key: 'greaterThan',
+      value: function greaterThan(logLevel) {
+        return this.level >= logLevel.level;
+      }
+    }]);
+    return LogLevel;
+  }();
+
+  var LEVEL_DEBUG = new LogLevel('DEBUG', LEVEL_DEFINITION.DEBUG.level, LEVEL_DEFINITION.DEBUG.color);
+  var LEVEL_INFO = new LogLevel('INFO', LEVEL_DEFINITION.INFO.level, LEVEL_DEFINITION.INFO.color);
+  var LEVEL_ERROR = new LogLevel('ERROR', LEVEL_DEFINITION.ERROR.level, LEVEL_DEFINITION.ERROR.color);
 
   var wrapDebug = void 0,
       wrapInfo = void 0,
@@ -52,22 +98,11 @@
 
     createClass(PerfectLog, null, [{
       key: 'initialize',
-
-      /**
-       * Initialize SmartLog with default behaviour
-       */
       value: function initialize() {
         this.enableConsoleOutput();
         this.disableReport();
         this.reportOptions = {};
       }
-
-      /**
-       * Enable report
-       *
-       * @param options
-       */
-
     }, {
       key: 'enableReport',
       value: function enableReport() {
@@ -85,22 +120,24 @@
           return;
         }
 
-        switch (this.reportOptions.level) {
-          case 'ERROR':
-            this.reportOptions.levelNumber = 1;
-            break;
-          case 'INFO':
-            this.reportOptions.levelNumber = 2;
-            break;
-          case 'DEBUG':
-            this.reportOptions.levelNumber = 3;
-            break;
-          default:
-            console.error('Invalid level option. Only ERROR/INFO/DEBUG are allowed.');
-            return;
+        var curLevel = void 0;
+        try {
+          curLevel = new LogLevel(this.reportOptions.level);
+          this.reportEnabled = true;
+        } catch (e) {
+          console.error('Invalid level option. Only ERROR/INFO/DEBUG are allowed.');
         }
 
-        this.reportEnabled = true;
+        // Construct sampling function
+        var sampleFn = function sampleFn() {
+          if (!_this.reportOptions.sample) {
+            return true;
+          } else if (typeof _this.reportOptions.sample === 'number') {
+            return Math.random() > _this.reportOptions.sample;
+          } else if (typeof _this.reportOptions.sample === 'function') {
+            return _this.reportOptions.sample();
+          }
+        };
 
         this.debug = function () {
           for (var _len = arguments.length, arg = Array(_len), _key = 0; _key < _len; _key++) {
@@ -108,8 +145,8 @@
           }
 
           wrapDebug.apply(undefined, arg);
-          if (_this.reportOptions.levelNumber >= 3) {
-            var reportObj = _this._buildReportScheme('DEBUG', _this._buildReportMsg(arg));
+          if (sampleFn() && LEVEL_DEBUG.greaterThan(curLevel)) {
+            var reportObj = _this._buildReportScheme(LEVEL_DEBUG, _this._buildReportMsg(arg));
             _this._report(reportObj);
           }
         };
@@ -120,8 +157,8 @@
           }
 
           wrapInfo.apply(undefined, arg);
-          if (_this.reportOptions.levelNumber >= 2) {
-            var reportObj = _this._buildReportScheme('INFO', _this._buildReportMsg(arg));
+          if (sampleFn() && LEVEL_INFO.greaterThan(curLevel)) {
+            var reportObj = _this._buildReportScheme(LEVEL_INFO, _this._buildReportMsg(arg));
             _this._report(reportObj);
           }
         };
@@ -132,24 +169,19 @@
           }
 
           wrapError.apply(undefined, arg);
-          if (_this.reportOptions.levelNumber >= 1) {
+          if (sampleFn() && LEVEL_ERROR.greaterThan(curLevel)) {
             var reportObj = void 0;
 
             if (arg.length === 1 && arg[0] instanceof Error) {
-              reportObj = _this._buildReportScheme('ERROR', '', arg[0]);
+              reportObj = _this._buildReportScheme(LEVEL_ERROR, '', arg[0]);
             } else {
-              reportObj = _this._buildReportScheme('ERROR', _this._buildReportMsg(arg));
+              reportObj = _this._buildReportScheme(LEVEL_ERROR, _this._buildReportMsg(arg));
             }
 
             _this._report(reportObj);
           }
         };
       }
-
-      /**
-       * Disable report
-       */
-
     }, {
       key: 'disableReport',
       value: function disableReport() {
@@ -159,51 +191,30 @@
         this.info = wrapInfo;
         this.error = wrapError;
       }
-
-      /**
-       * Enable console output
-       */
-
     }, {
       key: 'enableConsoleOutput',
       value: function enableConsoleOutput() {
         this.consoleOutput = true;
 
-        wrapDebug = wrapLog('log', 'DEBUG', 'green');
-        wrapInfo = wrapLog('info', 'INFO', 'blue');
-        wrapError = wrapLog('error', 'ERROR', 'red');
+        wrapDebug = wrapConsoleDebug;
+        wrapInfo = wrapConsoleInfo;
+        wrapError = wrapConsoleError;
 
         if (!this.reportEnabled) {
-          this.debug = wrapDebug;
-          this.info = wrapInfo;
-          this.error = wrapError;
+          this._resetWrapper();
         }
       }
-
-      /**
-       * Disable console output
-       */
-
     }, {
       key: 'disableConsoleOutput',
       value: function disableConsoleOutput() {
         this.consoleOutput = false;
 
-        wrapDebug = function wrapDebug() {};
-        wrapInfo = function wrapInfo() {};
-        wrapError = function wrapError() {};
+        wrapDebug = wrapInfo = wrapError = wrapEmptyFn;
 
         if (!this.reportEnabled) {
-          this.debug = wrapDebug;
-          this.info = wrapInfo;
-          this.error = wrapError;
+          this._resetWrapper();
         }
       }
-
-      /**
-       * Patch user defined data
-       */
-
     }, {
       key: 'patchData',
       value: function patchData(data, value) {
@@ -217,11 +228,12 @@
       }
     }, {
       key: '_buildReportScheme',
-      value: function _buildReportScheme(level, msg) {
+      value: function _buildReportScheme(logLevel, msg) {
         var error = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
         var scheme = {
-          level: level, msg: msg, error: error,
+          level: logLevel.levelText,
+          msg: msg, error: error,
           time: new Date().toISOString(),
           data: this.reportOptions.data,
           platform: {
@@ -235,12 +247,11 @@
       key: '_report',
       value: function _report(reportObj) {
         var xhr = new XMLHttpRequest();
-        xhr.onerror = function () {};
         xhr.open('POST', this.reportOptions.url, true);
 
         var requestBody = reportObj;
         if (this.reportOptions.beforeSend && this.reportOptions.beforeSend instanceof Function) {
-          requestBody = this.reportOptions.beforeSend.call(null, reportObj);
+          requestBody = this.reportOptions.beforeSend(reportObj);
         }
 
         xhr.send(JSON.stringify(requestBody));
@@ -251,6 +262,13 @@
         return array.map(function (i) {
           return JSON.stringify(i);
         }).join(', ');
+      }
+    }, {
+      key: '_resetWrapper',
+      value: function _resetWrapper() {
+        this.debug = wrapDebug;
+        this.info = wrapInfo;
+        this.error = wrapError;
       }
     }]);
     return PerfectLog;

@@ -106,10 +106,15 @@ Details in `options`
 | level | The least level should it report. Currently only `'DEBUG'`/`'INFO'`/`'ERROR'` is allowed. For example, if set to `'INFO'`, only INFO and ERROR level would be sent to the backend. | `'ERROR'` |
 | data  | Any specified data you want to send to the backend along with the log. |     |
 | beforeSend | Provide a function to transform log info schema into anything you want before sneding to backend. | |
+| sample | Expect a number between 0 and 1 or function. `Math.random` will be called and compare to sample number(greater than) to determine whether to report when you give a number. Or just call the sample function that return a boolean representing report or not. | |
 
 #### PerfectLog.patchData(data: object)
 
 Add user defined data anywhere before report the log.
+
+#### PerfectLog.patchData(key: string, value: object)
+
+Add user defined data, another function signature.
 
 ## Log Info Schema
 

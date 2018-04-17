@@ -1,8 +1,14 @@
 # Changelog
 
-### 0.0.1-beta.2 (2018-04-16)
+### 0.0.1 (2018-04-17)
+
+- First production ready version
+- Add `sample` option to reduce the request number
+
+### 0.0.1-beta.2~5 (2018-04-16)
 
 - Add TypeScript `d.ts` support
+- Configurating and testing TypeScript declarative file...
 
 ### 0.0.1-beta.1 (2018-04-16)
 

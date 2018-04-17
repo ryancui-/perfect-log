@@ -104,10 +104,15 @@ PerfectLog.enableReport({
 | level      | 最低日志上报级别。目前由高到低可设 `'ERROR'`/`'INFO'`/`'DEBUG'`，设置后只有高于该级别的日志才会上报到后端。比如，设置为 `'INFO'` 级别后，只有 ERROR 与 INFO 级别日志会上报，DEBUG 级别不会上报。 | `'ERROR'` |
 | data       | 自定义数据，随日志进行上报                                   |           |
 | beforeSend | 上报前调用，返回新的 JSON 对象作为上报的请求体               |           |
+| sample | 上报采样，可传入 0~1数字或函数。类型为数字时，会调用 `Math.random` 与其比较，大于采样率才会上报；类型为函数时，函数返回 `true` 才进行采样 | |
 
 #### PerfectLog.patchData(data: object)
 
 手动添加自定义数据，`data` 会覆盖原来已经定义的属性。
+
+#### PerfectLog.patchData(key: string, value: object)
+
+手动添加自定义数据，另一种调用方法。
 
 ## 日志信息对象
 
